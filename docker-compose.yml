@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+
+  dbos:
+    image: mysql:5.7
+    volumes:
+       - sqlstore:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: utopia
+      MYSQL_USER: abhiuday
+      MYSQL_PASSWORD: kalilinux
+      MYSQL_DATABASE: mydb
+
+  ghostos:
+    image: ghost:1-alpine
+    restart: always
+    depends_on: 
+       - dbos
+    ports:
+       - 8080:2368
+    environment:
+      database_client: mysql
+      database__connection__host: dbos
+      database__connection__user: abhiuday
+      database__connection__password: kalilinux
+      database__connection__database: mydb
+    volumes:
+       - ghoststore:/var/www/html
+
+volumes:
+
+    sqlstore:
+    ghoststore:
